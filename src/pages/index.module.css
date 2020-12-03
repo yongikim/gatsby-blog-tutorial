@@ -1,0 +1,7 @@
+.postListTitle {
+  text-decoration: underline;
+}
+
+.postListTitle:hover {
+  color: blue;
+}
