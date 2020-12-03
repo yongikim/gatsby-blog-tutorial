@@ -9,5 +9,5 @@ $ gatsby develop
 ## build & deploy
 ```
 $ gatsby build
-$ surge public
+$ surge public/ flashy-hook.surge.sh
 ```
