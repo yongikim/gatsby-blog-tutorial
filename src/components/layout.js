@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { css } from "@emotion/react"
 import { useStaticQuery, Link, graphql } from "gatsby"
+import classNames from 'classnames'
 import { rhythm } from "../utils/typography"
+import Styles from "./layout.module.css"
 
 export default function Layout({ children }) {
   const data = useStaticQuery(
@@ -16,34 +18,51 @@ export default function Layout({ children }) {
     `
   )
 
-  return (<div
-    css={css`
-      margin: 0 auto;
-      max-width: 700px;
-      padding: ${rhythm(2)};
-      padding-top: ${rhythm(1.5)};
-    `}
-  >
-    <Link to={`/`}>
-      <h3
-        css={css`
-          margin-bottom: ${rhythm(2)};
-          display: inline-block;
-          font-style: normal;
-        `}
-      >
-        {data.site.siteMetadata.title}
-      </h3>
-    </Link>
-    <Link
-      to={`/about/`}
-      css={css`
-        float: right;
-      `}
-    >
-      About
-    </Link>
-    {children}
-  </div>
+  const [fixedOnTop, setFixedOnTop] = useState(false)
+  const ref = useRef(null)
+
+  function onScroll() {
+    const scrollY = window.scrollY
+
+    if (scrollY >= ref.current.clientHeight && !fixedOnTop) {
+      setFixedOnTop(true)
+    } else if (scrollY < ref.current.clientHeight && fixedOnTop){
+      setFixedOnTop(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('scroll', onScroll)
+    return () => document.removeEventListener('scroll', onScroll)
+  })
+
+  const navbarClassName = classNames(Styles.navbar, { [Styles.navbarFixed]: fixedOnTop })
+
+  return (
+    <div>
+      <nav className={navbarClassName} ref={ref}>
+        <Link to={`/`}>
+          <h3 className={Styles.navbarTitle}>
+            {data.site.siteMetadata.title}
+          </h3>
+        </Link>
+        <Link to={`/about/`} className={Styles.navbarItem}>
+          About
+        </Link>
+        <Link to={`/about/`} className={Styles.navbarItem}>
+          About
+        </Link>
+        <Link to={`/about/`} className={Styles.navbarItem}>
+          About
+        </Link>
+        <Link to={`/about/`} className={Styles.navbarItem}>
+          About
+        </Link>
+        <Link to={`/about/`} className={Styles.navbarItem}>
+          About
+        </Link>
+      </nav>
+      {children}
+    </div>
   )
 }
